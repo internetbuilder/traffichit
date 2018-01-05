@@ -1,0 +1,107 @@
+<style type="text/css">
+    #index {
+        margin-top: 3em;
+    }
+    #descr{
+        margin-top: 3em;
+    }
+
+    /* -------------------------------------- 
+   Media Queries
+   -------------------------------------- */
+
+/* Portrait & landscape phone */
+	@media (max-width: 480px) {
+        #descr p{
+            font-size: 1.4rem;
+        }
+	}
+
+	/* Landscape phone to portrait tablet */
+	@media (max-width: 768px) {
+	
+		 #descr p{
+            font-size: 1.4rem;
+        }
+	}
+
+	@media (min-width: 768px) {
+	
+	}
+
+	/* Large desktop */
+	@media (min-width: 1200px) {
+
+
+
+	}
+
+</style>
+<div class="row" id="index">
+    <div class="col-md-6 col-sm-12">
+        <div class="embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item" src="//www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+        </div>
+        <div class="text-center text-muted">
+            <h3>How does it Work?</h3>
+        </div>
+    </div>
+    <div class="col-md-6 col-sm-12">
+        <h1 class="display-4 font-weight-bold">Generate Traffic for
+            <span class="text-success">Free</span>
+        </h1>
+        <p>
+            Building traffic is important to your seo. Ads are expensive and budgets are tight for most people. Thats why we built a
+            solution to help your site get traction free of charge. All you need is a web browser to start.
+        </p>
+        <div class="text-center justify-content-center">
+            <h3>Start Now by</h3>
+            <div id="my-signin2"></div>
+            <a href="/auth/google" class="btn btn-danger"><span class="fa fa-google-plus"></span> Google</a>
+        </div>
+    </div>
+</div>
+<div class="row" id="descr">
+
+    <div class="col-md-4 col-sm-4">
+        <h3 class="text-center text-success">Step 1</h3>
+        <p class="lead text-primary">
+            Sigin with google and create a project for the site you want to receive traffic>
+        </p>
+    </div>
+    <div class="col-md-4 col-sm-4">
+        <h3 class="text-center text-success">Step 2</h3>
+        <p class="lead text-primary">
+            Tap the Earn points button to browse sites and start earning points automatically>
+        </p>
+    </div>
+    <div class="col-md-4 col-sm-4">
+        <h3 class="text-center text-danger">Step 3</h3>
+        <p class="lead text-primary">
+            Once you have earned points, your site receives traffic from other users>
+        </p>
+    </div>
+
+</div>
+
+<script>
+    function onSuccess(googleUser) {
+        console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+    }
+    function onFailure(error) {
+        console.log(error);
+    }
+    function renderButton() {
+        gapi.signin2.render('my-signin2', {
+            'scope': 'profile email',
+            'width': 240,
+            'height': 50,
+            'longtitle': true,
+            'theme': 'dark',
+            'onsuccess': onSuccess,
+            'onfailure': onFailure
+        });
+    }
+</script>
+
+<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
