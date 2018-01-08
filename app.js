@@ -22,8 +22,14 @@ const expressHandleBars = require("express-handlebars").create({
 var app = express();
 
 // connecting to mongoose
-mongoose.connect("mongodb://localhost:27017/trafficHit");
-// mongoose.connect('mongodb://traffichit:traffichit@traffichit-shard-00-00-lyre9.mongodb.net:27017,traffichit-shard-00-01-lyre9.mongodb.net:27017,traffichit-shard-00-02-lyre9.mongodb.net:27017/admin?replicaSet=TrafficHit-shard-0&ssl=true');
+if(process.env.DEV_ENV){
+  mongoose.connect("mongodb://localhost:27017/trafficHit");
+}
+else{
+  mongoose.connect('mongodb://traffichit:traffichit@ds245357.mlab.com:45357/heroku_mv8ds3ms');
+}
+
+
 require('./passport-init.js');
 
 
