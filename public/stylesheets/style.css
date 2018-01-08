@@ -6,6 +6,10 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizelegibility;
         font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        background-color: #ebebeb;
   }
   
-  
+  nav{
+    background: none;
+    background-color: #ffffff;
+  }

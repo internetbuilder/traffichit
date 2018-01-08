@@ -11,11 +11,18 @@ router.get('/auth/google/callback',
 
         passport.authenticate('google', 
 
-                {   successRedirect: '/users',
+                {   successRedirect: '/dashboard',
                     failureRedirect: '/',
                     failureFlash: true
                 }
         )
 );
+
+router.get('/dashboard',(req,res,next)=>{
+
+        res.render('dashboard/index');
+
+});
+
 
 module.exports = router;
