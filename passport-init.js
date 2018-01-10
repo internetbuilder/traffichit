@@ -7,9 +7,9 @@ passport.serializeUser(function (user, done) {
     done(null, user.google.id);
 });
 
-passport.deserializeUser(function (email, done) {
+passport.deserializeUser(function (id, done) {
 
-    User.findOne({ 'google.id': email }, function (err, user) {
+    User.findOne({ 'google.id': id}, function (err, user) {
         done(err, user);
     });
 });
@@ -29,17 +29,20 @@ passport.use(new GoogleStrategy({
 
                 console.log("mongodb is not confused....");
                 if (err){
+                    console.log("found an error");
                     return done(err);
                 }
                    
                 if (user){
+                    console.log("the users permissions are"+user);
                     return done(null, user,{message: "You'll be redirected to the dashboard."});
-                    console.log("the users permissions are"+user.permission);
+                    
                 }
                 else {
                     console.log("we are here and about to create new user in the system.");
                     console.log(profile);
                     var newUser = new User();
+                    newUser.permission.push("user");
                     newUser.google.id = profile.id;
                     newUser.google.token = accessToken;
                     newUser.google.name = profile.displayName;
@@ -47,9 +50,14 @@ passport.use(new GoogleStrategy({
                     newUser.google.imageUrl = profile.photos[0].value;
                     
                     newUser.save(function(err){
-                        if (err)
-                            throw err;
+                        if (err){
+                           
+                            return(err,false);
+                        }
+                           
+                        console.log("user was successfully saved");
                         return done(null, newUser);
+                        
                     });
                     
                 }

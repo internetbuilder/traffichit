@@ -18,11 +18,4 @@ router.get('/auth/google/callback',
         )
 );
 
-router.get('/dashboard',(req,res,next)=>{
-
-        res.render('dashboard/index');
-
-});
-
-
 module.exports = router;

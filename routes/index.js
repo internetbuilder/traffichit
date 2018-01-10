@@ -8,8 +8,4 @@ router.get('/', (req, res, next) =>{
   res.render('index/index', { title: 'Express' });
 });
 
-router.get('/logout', (req, res, next) =>{
-  req.logout();
-  res.redirect('/');
-});
 module.exports = router;

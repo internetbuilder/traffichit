@@ -17,13 +17,36 @@ const expressHandleBars = require("express-handlebars").create({
   extname: "hbs",
   layoutsDir: path.join(__dirname, "views/layouts"),
   partialsDir: path.join(__dirname, "views/partials"),
+  
+  helpers:{
+
+    trafficToday: function(project) { 
+
+        var trafficDates = project.updated_at;
+        var total=0;
+
+        var today = new Date();   
+
+        for(count = 0; count < trafficDates.length; count++){
+            
+            if(trafficDates[count].getDate() == today.getDate()){
+                total++;
+            }
+            
+        }
+
+        return total;
+     },
+    
+  }
 });
 
 var app = express();
 
 // connecting to mongoose
-if(process.env.DEV_ENV){
-  mongoose.connect("mongodb://localhost:27017/trafficHit");
+ if(process.env.DEV_ENV){
+
+   mongoose.connect("mongodb://localhost:27017/trafficHit");
 }
 else{
   mongoose.connect('mongodb://traffichit:traffichit@ds245357.mlab.com:45357/heroku_mv8ds3ms');
@@ -53,8 +76,9 @@ app.use(passport.session());
 
 
 app.use('/', index);
-app.use('/users', users);
 app.use('/',auth);
+app.use('/', users);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

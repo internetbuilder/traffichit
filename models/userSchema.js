@@ -11,9 +11,8 @@ const userSchema = new Schema({
                 token: {type:String, required:true},
                 imageUrl: String
             },
-            points: {type:String, default:0},
-            projects: [{ type: Schema.Types.ObjectId, ref: 'Project' }],
-            permission:[{type:String, default:'user',required:true}],
+            points: {type:Number, default:0},
+            permission:[],
             created_at: {type:Date, default:Date.now}
 });
 

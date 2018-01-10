@@ -1,25 +1,76 @@
 <style type="text/css">
-    #wrapper{
+    #wrapper {
         margin-top: 2rem;
-        
+
     }
 
-    h2{
-        margin-top: 2rem;
-         margin-bottom: 2rem;
+    h2 {
+        margin-top: 5rem;
+        margin-bottom: 2rem;
+    }
+
+    a {
+        cursor: pointer;
+    }
+
+    a.disabled {
+        /* Make the disabled links grayish*/
+        color: gray;
+        /* And disable the pointer events */
+        pointer-events: none;
+    }
+
+    table form {
+        display: inline;
     }
 </style>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog h-100 my-0 mx-auto d-flex flex-column justify-content-center" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Enter a
+                    <span class="font-weight-bold text-primary">URL</span> to start a project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/project">
+                    <div class="form-group">
+                        <input type="url" id="project" class="form-control" name="url" aria-describedby="projectWarning" required>
+                        <small id="projectWarning" class="text-muted">
+                            Must be a Valid link.
+                        </small>
+                    </div>
+                    <button type="submit" class="btn btn-primary float-right">Save changes</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <span>Please
+                    <span class="text-danger">do not</span> publish any website that is related to
+                    <span class="text-danger">pornography or violence.</span>
+                    failure to comply will attract account termination.
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <h2>Control dashboard</h2>
 
 <div class="row">
 
-    <div class="col-md-7 col-sm-12 my-auto" style="background-color:#fff;">
+    <div class="col-lg-7 col-sm-12 my-auto" style="background-color:#fff;">
 
         <ul class="nav list-inline pt-4 pr-3 pb-4 pl-3" style="vertical-align: middle">
             <li class="list-inline-item pt-0 pr-3 pb-3 pl-0" style="color:#f7f7f9;">
-                <a class="btn btn-success btn-lg">
-                    <i class="fa fa-plus" aria-hidden="true" style="margin-right: 2px;"></i>Project</a>
+                <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target=".modal">
+                    <i class="fa fa-plus" aria-hidden="true" style="margin-right: 2px;"></i>Project</button>
+
             </li>
             <li class="list-inline-item">
                 <p class="text-muted font-weight-bold" style="float:right;">*After creating a project, traffic will be sent to
@@ -28,16 +79,19 @@
         </ul>
 
     </div>
-    <div class="col-md-5 col-sm-12 my-auto">
+    <div class="col-lg-5 col-sm-12 my-auto">
         <div style="background-color: #fff;">
             <ul class="nav list-inline">
                 <li class="list-inline-item pt-3 pr-3 pb-3 pl-3">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png" style="max-height:85px;"
-                        class="rounded-circle mx-auto d-block" alt="profile_picture">
+                    <img src="{{img}}" style="max-height:85px; min-height:85px;" class="rounded-circle mx-auto d-block" alt="profile_picture">
                 </li>
                 <li class="list-inline-item my-auto pl-2">
-                    <h6 class="text-muted font-weight-bold">Account Name</h6>
-                    <h6 class="text-muted font-weight-bold">My Points:10032</h6>
+                    <h6 class="text-muted font-weight-bold">Account Name:
+                        <span class="text-primary">{{name}}</span>
+                    </h6>
+                    <h6 class="text-muted font-weight-bold">My Points:
+                        <span class="text-primary">{{points}}</span>
+                    </h6>
                 </li>
             </ul>
         </div>
@@ -46,49 +100,78 @@
 
 </div>
 
-<div class="row" id="wrapper" style="background-color:#f4f4f5;">
+<div class="row bg-faded" id="wrapper">
     <div class="col-md-12">
         <table class="table">
             <thead>
                 <tr>
-
                     <th>Address</th>
                     <th>Traffic Received</th>
                     <th>Traffic Received Today</th>
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="project-container">
+                {{# each projects}}
                 <tr style="padding:5px;">
 
                     <td>
-                        http://google.com
+                        {{ this.url }}
                     </td>
                     <td>
-                        <h3 class="text-success"> 10021</h3>
+                        <h3 class="text-success pl-5"> {{ this.traffic }}</h3>
                     </td>
                     <td>
-                        <h3 class="text-success"> 20</h3>
+                        <h3 class="text-success pl-5"> {{#trafficToday this}}{{/trafficToday}} </h3>
                     </td>
-                    
+
                     <td>
-                        <a><i class="fa fa-pause fa-2x" aria-hidden="true"></i> </a>
-                        <a><i class="fa fa-play fa-2x pl-2 pr-2" aria-hidden="true"></i> </a>
-                        <a><i class="fa fa-trash fa-2x" aria-hidden="true"></i> </a>
+                        <form id="pause{{this._id}}" action="/pause" method="post">
+                            <input type="hidden" name="_id" value="{{ this._id }}">
+                            <a href="javascript:$('#pause{{this._id}}').submit();" class="{{#if this.active }}{{else}}disabled{{/if}}">
+                                <i class="fa fa-pause fa-2x" aria-hidden="true"></i>
+                            </a>
+                        </form>
+                        <form id="play{{this._id}}" action="/play" method="post">
+                            <input type="hidden" name="_id" value="{{ this._id }}">
+                            <a href="javascript:$('#play{{this._id}}').submit();" class="{{#if this.active }}disabled{{else}}{{/if}}">
+                                <i class="fa fa-play fa-2x pl-2 pr-2" aria-hidden="true"></i>
+                            </a>
+                        </form>
+                        <form id="delete{{this._id}}" action="/delete" method="post">
+                            <input type="hidden" name="_id" value="{{ this._id }}">
+                            <a href="javascript:$('#delete{{this._id}}').submit();">
+                                <i class="fa fa-trash fa-2x text-danger" aria-hidden="true"></i>
+                            </a>
+                        </form>
+
                     </td>
                 </tr>
+                {{/each}}
             </tbody>
         </table>
 
     </div>
+
     <div class="clearfix hidden-sm-up"></div>
-    
+
 </div>
 <div style="color:#fff" class="pt-4">
+    {{{paginator}}}
+    <a class="btn btn-primary float-left font-weight-bold" href="/logout">Logout</a>
 
-        <a class="btn btn-primary float-left font-weight-bold">Logout</a>
 
-
-        <a class="btn btn-primary float-right font-weight-bold">Earn Points</a>
+    <a class="btn btn-primary float-right font-weight-bold">Earn Points</a>
 
 </div>
+
+<script>
+    $(function () {
+        $('.modal').modal({
+            show: false,
+            keyboard: false,
+            backdrop: 'static'
+        });
+
+    });
+</script>
