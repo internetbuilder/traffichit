@@ -27,7 +27,9 @@ router.get('/dashboard/:post?', isLoggedIn, (req, res, next) => {
         .limit(perPage)
         .sort({ created_at: 'desc' })
         .exec(function (err, projects) {
-            Project.find({ '_created_by': req.user._id }).count().exec(function (err, count) {
+            Project.find({ '_created_by': req.user._id })
+            .count()
+            .exec(function (err, count) {
                 if (err) {
                     return next(err);
                 }
@@ -39,7 +41,9 @@ router.get('/dashboard/:post?', isLoggedIn, (req, res, next) => {
                     points: req.user.points,
                     img: req.user.google.imageUrl,
                     projects: projects,
-                    paginator: paginate(pages, page)
+                    title:'dashboard',
+                    paginator: paginate(pages, page),
+
                 })
             })
         });
@@ -60,7 +64,7 @@ router.post("/project", isLoggedIn, (req, res, next) => {
         if (err)
             console.log(err);
 
-        res.redirect('/dashboard/1');
+        res.redirect('/dashboard');
     });
 
 });
@@ -128,12 +132,95 @@ router.post("/delete", isLoggedIn, (req, res, next) => {
 
 });
 
+
+
+router.get("/earnpoints", isLoggedIn, (req, res, next) => {
+    
+        Project
+        .find({'participants': {$ne: req.user._id},'active':true})
+        .populate({ 
+            path: '_created_by',
+            select: 'points',
+            options: {
+                sort: { points: -1 }
+            } 
+        })
+        .limit(1)//please do not change this limit
+        .exec( (err, project)=> {
+            if (err)
+                res.send(err);
+    
+            console.log(project);
+    
+            res.render('dashboard/earnpoints',{
+                title:'Earn+points',
+                project:project[0],
+                user: req.user,
+                layout:false
+            })
+    
+        });
+    
+});
+
+router.post("/earnpoints", isLoggedIn, (req, res, next) => {
+    
+        const projectId = req.body.project;
+        //const newPoints = req.user.points+0.8;
+        const updatedAt = new Date();
+        
+
+        if(!projectId){
+            res.redirect("/dashboard");
+        }
+        
+    Project
+    .findByIdAndUpdate( projectId, 
+        {"$addToSet": { "participants": req.user._id },
+            "$inc":{ "traffic": 1 },
+            "$push":{ "updated_at": updatedAt } 
+        },
+        (err, project) =>{
+            if (err){
+                res.redirect("/dashboard");
+            }
+            
+
+            //participants has already been updated for this project
+            //proceed to increment the users points
+
+            User
+            .findByIdAndUpdate(req.user._id,{ $inc: { points: 0.8 }},//increments user points by 0.8
+                (err,user)=>{
+                    
+                    if (err){
+                        res.send(err);
+                    }
+                     
+                    console.log("user points successfully incremented");
+                    res.redirect("/earnpoints");
+
+                }
+            );
+
+            
+
+        }
+
+    );
+            
+});
+
+
+
 router.get('/logout', (req, res, next) => {
     req.logout();
     req.session.destroy();
 
     res.redirect('/');
 });
+
+
 
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
@@ -143,7 +230,7 @@ function isLoggedIn(req, res, next) {
     res.redirect('/');
 }
 
-var paginate = (pages, current) => {
+const paginate = (pages, current) => {
 
     let paginator = "";
 

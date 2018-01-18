@@ -90,7 +90,7 @@
                         <span class="text-primary">{{name}}</span>
                     </h6>
                     <h6 class="text-muted font-weight-bold">My Points:
-                        <span class="text-primary">{{points}}</span>
+                        <span class="text-primary">{{#pointsToFixed points}}{{/pointsToFixed}}</span>
                     </h6>
                 </li>
             </ul>
@@ -161,7 +161,7 @@
     <a class="btn btn-primary float-left font-weight-bold" href="/logout">Logout</a>
 
 
-    <a class="btn btn-primary float-right font-weight-bold">Earn Points</a>
+    <a class="btn btn-primary float-right font-weight-bold" href="/earnpoints" target="_blank">Earn Points</a>
 
 </div>
 

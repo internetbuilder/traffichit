@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="google-signin-client_id" content="296627793404-eidvrntjp0jcphekmd07goq29kg5a633.apps.googleusercontent.com">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style type="text/css">
+        html {
+            overflow: auto;
+        }
+
+        html,
+        body,
+        div,
+        iframe {
+            margin: 0px;
+            padding: 0px;
+            height: 100%;
+            border: none;
+        }
+
+        iframe {
+            display: block;
+            width: 100%;
+            border: none;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+    </style>
+
+
+
+
+</head>
+
+<body>
+
+    {{!-- start of navigation bar --}}
+    <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary fixed-top">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="container">
+
+            <a class="navbar-brand" href="#">
+                <strong>LOGO</strong>
+            </a>
+
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">
+                            <span class="font-weight-bold" id="time">   </span>
+                        </a>
+                    </li>
+                    <li class="nav-item pl-4">
+                        <a class="nav-link text-white btn btn-danger btn-sm" href="javascript:closeMe();">
+                            <span class="font-weight-bold">Close Tab</span>
+                        </a>
+                    </li>
+                    <li class="nav-item pl-2">
+                        <a class="nav-link text-white btn btn-info btn-sm" href="#">
+                            <span class="font-weight-bold">Report Site</span>
+                        </a>
+                    </li>
+
+                </ul>
+
+
+                <ul class="navbar-nav ml-md-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white font-weight-bold" href="#">
+                            <span class="font-weight-bold">+0.8 points</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white">
+                            <span class="font-weight-bold">Points Earned: {{#pointsToFixed user.points}}{{/pointsToFixed}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </nav>
+
+    <form method="post" action="#">
+        <input type="hidden" name="project" value="{{project._id}}"/>
+    </form>
+
+    {{!-- end of navigation bar --}}
+    <div class="iframe">
+        <iframe id="tree" name="myiframe" src="{{project.url}}" frameborder="0" marginheight="0" marginwidth="0" width="100%"
+            height="100%"></iframe>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+    <script>
+        function closeMe()
+        {
+
+            var win = window.open("","_self"); /* url = "" or "about:blank"; target="_self" */
+
+            win.close();
+
+        }
+        history.replaceState({}, "/dashboard");
+        document.getElementsByTagName("html")[0].className = "js";
+    </script>
+
+    <script src="responsive-iframes.js"></script>
+    <script>
+        $('iframe').on('load', function () {
+
+
+                // Set the date we're counting down to
+        var timer = 15;
+
+        // Update the count down every 1 second
+        setInterval(function () {
+
+            // Find the distance between now an the count down date
+            timer = timer - 1;
+
+            // Output the result in an element with id="demo"
+            document.getElementById("time").innerHTML = timer + "s ";
+
+            // If the count down is over, write some text 
+            if (timer < 0) {
+                clearInterval(this);
+                document.getElementById("time").innerHTML = "EXPIRED";
+                
+                //submit the form
+                $('form').submit();
+            }
+
+
+        }, 1000);
+
+
+        });
+        
+    </script>
+
+</body>
+
+</html>

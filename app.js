@@ -20,6 +20,10 @@ const expressHandleBars = require("express-handlebars").create({
   
   helpers:{
 
+    pointsToFixed: function(point){
+      return point.toFixed(2);
+     },
+
     trafficToday: function(project) { 
 
         var trafficDates = project.updated_at;
@@ -37,6 +41,7 @@ const expressHandleBars = require("express-handlebars").create({
 
         return total;
      },
+
     
   }
 });
@@ -75,9 +80,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
+
+app.use('/', users);
 app.use('/', index);
 app.use('/',auth);
-app.use('/', users);
+
 
 
 // catch 404 and forward to error handler
