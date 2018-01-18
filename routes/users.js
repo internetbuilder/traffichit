@@ -61,8 +61,11 @@ router.post("/project", isLoggedIn, (req, res, next) => {
     console.log(req.body);
 
     project.save(function (err, post) {
-        if (err)
+        if (err){
             console.log(err);
+            return  res.send(err);
+        }
+            
 
         res.redirect('/dashboard');
     });
@@ -77,9 +80,10 @@ router.post("/pause", isLoggedIn, (req, res, next) => {
     console.log("The found id is "+id);
 
     Project.findById(id,function (err, project) {
-        if (err)
-            res.send(err);
-
+        if (err){
+            return res.send(err);
+        }
+        
         console.log(project);
         project.active=false;
 
@@ -99,8 +103,10 @@ router.post("/play", isLoggedIn, (req, res, next) => {
     console.log("The found id is "+id);
 
     Project.findById(id,function (err, project) {
-        if (err)
-            res.send(err);
+        if (err){
+            return  res.send(err);
+        }
+        
             
         console.log(project);
         project.active=true;
@@ -121,9 +127,10 @@ router.post("/delete", isLoggedIn, (req, res, next) => {
     console.log("The found id is " + id);
 
     Project.remove({_id:id}, function (err, project) {
-        if (err)
-            res.send(err);
-
+        if (err){
+            return res.send(err);
+        }
+         
         console.log(project);
 
         res.redirect('/dashboard')
@@ -147,8 +154,10 @@ router.get("/earnpoints", isLoggedIn, (req, res, next) => {
         })
         .limit(1)//please do not change this limit
         .exec( (err, project)=> {
-            if (err)
-                res.send(err);
+            if (err){
+                return res.send(err);
+            }
+            
     
             console.log(project);
     
@@ -171,7 +180,7 @@ router.post("/earnpoints", isLoggedIn, (req, res, next) => {
         
 
         if(!projectId){
-            res.redirect("/dashboard");
+            return res.redirect("/dashboard");
         }
         
     Project
@@ -181,8 +190,9 @@ router.post("/earnpoints", isLoggedIn, (req, res, next) => {
             "$push":{ "updated_at": updatedAt } 
         },
         (err, project) =>{
+
             if (err){
-                res.redirect("/dashboard");
+                return res.redirect("/dashboard");
             }
             
 
@@ -194,7 +204,7 @@ router.post("/earnpoints", isLoggedIn, (req, res, next) => {
                 (err,user)=>{
                     
                     if (err){
-                        res.send(err);
+                       return res.send(err);
                     }
                      
                     console.log("user points successfully incremented");
