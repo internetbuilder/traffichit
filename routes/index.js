@@ -5,6 +5,10 @@ var router = express.Router();
 
 
 router.get('/', (req, res, next) =>{
+
+  if (req.isAuthenticated()) {
+      return res.redirect("/dashboard");
+  }
   res.render('index/index', { title: 'Express' });
 });
 

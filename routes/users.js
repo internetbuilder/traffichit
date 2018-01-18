@@ -152,19 +152,28 @@ router.get("/earnpoints", isLoggedIn, (req, res, next) => {
                 sort: { points: -1 }
             } 
         })
-        .limit(1)//please do not change this limit
+        //.limit(1)//please do not change this limit
         .exec( (err, project)=> {
+
             if (err){
                 return res.send(err);
             }
             
+            console.log("debugging..............");
     
             console.log(project);
+
+            let noProject=true;
+
+            if(project.length >0){
+                noProject=false;
+            }
     
             res.render('dashboard/earnpoints',{
                 title:'Earn+points',
                 project:project[0],
                 user: req.user,
+                noProject:noProject,
                 layout:false
             })
     
@@ -180,6 +189,8 @@ router.post("/earnpoints", isLoggedIn, (req, res, next) => {
         
 
         if(!projectId){
+            console.log(projectId);
+            console.log("there is no project id");
             return res.redirect("/dashboard");
         }
         
@@ -192,6 +203,7 @@ router.post("/earnpoints", isLoggedIn, (req, res, next) => {
         (err, project) =>{
 
             if (err){
+                console.log("cannot increment traffic for this project");
                 return res.redirect("/dashboard");
             }
             
